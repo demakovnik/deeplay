@@ -52,6 +52,7 @@ fi
 
 cp $APP_SERVICE temp
 
+#Подставляем нужный путь до файла app.jar
 awk -i inplace -v cuv1="$WORD" -v cuv2="$INSTALL_DIR/$JAR_FILE" '{gsub(cuv1,cuv2); print;}' temp
 
 cp temp $UNIT_DIR/$APP_SERVICE && rm temp
