@@ -5,7 +5,7 @@ INSTALL_DIR=$1
 JAR_FILE=app.jar
 APP_SERVICE=app.service
 OS_NAME=Ubuntu
-OS_VERSION=20.04.3
+OS_VERSION=
 WORD=path_to_file
 
 if [[ $EUID -ne 0 ]]; then
@@ -28,11 +28,11 @@ if ! [ -f $JAR_FILE ]; then
      exit 1;
 fi
 
-if ! [ -d $INSTALL_DIR ]; then
-     mkdir $INSTALL_DIR
+if ! [ -d "$INSTALL_DIR" ]; then
+     mkdir "$INSTALL_DIR"
 fi 
 
-cp $JAR_FILE $INSTALL_DIR/$JAR_FILE
+cp $JAR_FILE "$INSTALL_DIR"/$JAR_FILE
 
 #Проверка на существование папки $UNIT_DIR
 if ! [ -d $UNIT_DIR ]; then
@@ -47,7 +47,6 @@ if ! [ -f $APP_SERVICE ]; then
 fi
 
 #Модификация файла $APP_SERVICE для нужного пути до файла jar
-
 cp $APP_SERVICE temp
 
 #Подставляем нужный путь до файла app.jar

@@ -3,5 +3,6 @@
 FILENAME=$1
 IP_ADDRESS=10.1.192.38
 
-cat $FILENAME | grep $IP_ADDRESS | awk ' { match($0, /.+sid=\/(.+)\/&/, sid);}
+# shellcheck disable=SC2002
+cat "$FILENAME" | grep $IP_ADDRESS | awk ' { match($0, /.+sid=\/(.+)\/&/, sid);}
 		      { if (sid[1] != "") print sid[1];}' | sort
