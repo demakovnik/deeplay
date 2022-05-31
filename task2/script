@@ -1,6 +1,5 @@
 #!/bin/bash
 
-HOME_DIR=~
 UNIT_DIR=/etc/systemd/system
 INSTALL_DIR=$1
 JAR_FILE=app.jar
@@ -14,10 +13,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-
 #Парсим имя и версию ОС
 lsb_release -d | awk ' { match($0, /(.+) ([0-9]+\.[0-9]+\.[0-9]+)/, os);}
-			{if (os[1] != "" && os[2] != "") OS_NAME=os[1]; 				OS_VERSION=os[2]}'
+			{if (os[1] != "" && os[2] != "") OS_NAME=os[1]; OS_VERSION=os[2]}'
 
 echo "Checked OS: $OS_NAME $OS_VERSION"
 
