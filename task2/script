@@ -1,0 +1,62 @@
+#!/bin/bash
+
+HOME_DIR=~
+UNIT_DIR=/etc/systemd/system
+INSTALL_DIR=$1
+JAR_FILE=app.jar
+APP_SERVICE=app.service
+OS_NAME=Ubuntu
+OS_VERSION=20.04.3
+WORD=path_to_file
+
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    exit 1
+fi
+
+
+#Парсим имя и версию ОС
+lsb_release -d | awk ' { match($0, /(.+) ([0-9]+\.[0-9]+\.[0-9]+)/, os);}
+			{if (os[1] != "" && os[2] != "") OS_NAME=os[1]; 				OS_VERSION=os[2]}'
+
+echo "Checked OS: $OS_NAME $OS_VERSION"
+
+# Здесь можно добавить версионную обработку для различных версий ОС Linux 
+# на предмет инициализации папки установки UNIT_DIR 
+
+#Проверка на существование файла app.jar 
+if ! [ -f $JAR_FILE ]; then
+     echo "There is no jar file!. Abort script";
+     exit 1;
+fi
+
+if ! [ -d $INSTALL_DIR ]; then
+     mkdir $INSTALL_DIR
+fi 
+
+cp $JAR_FILE $INSTALL_DIR/$JAR_FILE
+
+#Проверка на существование папки $UNIT_DIR
+if ! [ -d $UNIT_DIR ]; then
+	echo "Directory $UNIT_DIR not found. Abort script";
+	exit 1 ;
+fi
+
+#Проверка на существование файла $APP_SERVICE
+if ! [ -f $APP_SERVICE ]; then
+	echo "There is no app.service file. Abort script";
+	exit 1 ;
+fi
+
+#Модификация файла $APP_SERVICE для нужного пути до файла jar
+
+cp $APP_SERVICE temp
+
+awk -i inplace -v cuv1="$WORD" -v cuv2="$INSTALL_DIR/$JAR_FILE" '{gsub(cuv1,cuv2); print;}' temp
+
+cp temp $UNIT_DIR/$APP_SERVICE && rm temp
+
+echo "reload systemctl daemons"
+systemctl daemon-reload
+
+exit 0
