@@ -3,7 +3,7 @@ Description=Application service from deeplay
 
 [Service]
 Type=simple
-ExecStart=java -jar path_to_file ~/some_out_file "Service is working!"
+ExecStart=java -jar path_to_file some_out_file "Service is working!"
 Restart=on-failure
 RestartSec=15
 [Install]
